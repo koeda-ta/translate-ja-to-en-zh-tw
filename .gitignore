@@ -1,0 +1,8 @@
+# eval の実行結果（実行ごとに生成される）
+evals/results/
+
+# Claude Code のローカル設定
+.claude/settings.local.json
+
+# macOS
+.DS_Store

@@ -1,0 +1,14 @@
+{
+  "name": "translate-ja-to-en-zh-tw",
+  "description": "日本語を英語・簡体中文・繁体中文へ翻訳する Claude Code プラグイン",
+  "owner": {
+    "name": "koeda-ta"
+  },
+  "plugins": [
+    {
+      "name": "translate-ja-to-en-zh-tw",
+      "source": "./",
+      "description": "日本語を英語・簡体中文・繁体中文へ翻訳するskill。繁体中文は簡体中文からの字体変換で作らず、必ず日本語の原文から台湾の國語として訳し直す"
+    }
+  ]
+}
