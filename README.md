@@ -18,7 +18,7 @@
 - 儿化: 大陸の 一点儿 に対し台湾は 一點
 - 文法: 寒くない？ は 冷不冷？ ではなく 會不會冷？
 
-そこで、繁体中文は簡体中文の訳を参照せず日本語の原文から訳し直すことを最上位のルールに置き、出力前の自己チェックと eval の両方で大陸語彙の混入を検出するようにしている。evals/ のケースが語彙・動詞・儿化・會用法に分かれているのは、この引っ張られ方が層ごとに別々に起きるため。
+そこで、繁体中文は簡体中文の訳を参照せず日本語の原文から訳し直すことを最上位のルールに置き、出力前の自己チェックと eval の両方で大陸語彙の混入を検出するようにしている。evals/ のテストケースが語彙・動詞・儿化・會用法に分かれているのは、この引っ張られ方が層ごとに別々に起きるため。
 
 ### インストール
 
@@ -46,7 +46,7 @@ claude plugin install translate-ja-to-en-zh-tw@translate-ja-to-en-zh-tw
 
 ## eval
 
-evals/ に 16 件のテストケースがある。1 ケースが prompt.md（入力）と graders/criteria.md（合否の判定基準）の組で、判定は LLM が行う。
+evals/ に 23 件のテストケースがある。各テストケースは prompt.md（入力）と graders/criteria.md（合否の判定基準）の組で、判定は LLM が行う。
 
 ### 実行
 
@@ -56,7 +56,7 @@ claude plugin eval ./ --judge-model sonnet
 
 --judge-model sonnet は必須。judge の既定は haiku だが、criteria.md は 軟體 と 軟件 のような語彙の可否を細かく判定するため、haiku では誤判定する。sonnet では 16 件全て合格し、skill なしでは全件不合格になる。
 
-1 ケースだけ実行する場合はケース名を指定する。
+特定のテストケースだけ実行する場合は、テストケース名を指定する。
 
 ```
 claude plugin eval ./ --judge-model sonnet --case it-terms
@@ -66,7 +66,7 @@ claude plugin eval ./ --judge-model sonnet --case it-terms
 
 | オプション | 用途 |
 | ---------- | ---- |
-| --case <名前> | ケースを絞り込む |
+| --case <名前> | テストケースを絞り込む |
 | -j <数> | 最大 8 並列で実行する |
 | --no-publish | HTML レポートを公開せずローカルに留める |
 | --trust-plugin | CI 向けに初回の信頼確認を省略する |
@@ -75,30 +75,37 @@ claude plugin eval ./ --judge-model sonnet --case it-terms
 
 実行結果は evals/results/ に出力される。このディレクトリは .gitignore に登録済み。
 
-### ケース一覧
+### テストケース一覧
 
-| ケース | 確認する内容 |
-| ------ | ------------ |
-| basic-vocab | 地域差のある基本語彙 |
-| business-doc | 業務文書の文体 |
-| country-names | 国名の音訳の違い |
-| daily-life | 日常語彙 |
-| education-admin | 教育・行政用語 |
-| erhua-avoidance | 繁体中文で儿化を使わないこと |
-| hongkong-terms | 香港の語彙を台湾の訳に混ぜないこと |
-| it-terms | IT 用語の訳し分け |
-| no-mixed-glyphs | 簡体字と繁体字が混在しないこと |
-| proper-nouns | 固有名詞の表記 |
-| spoken-hui | 台湾の「會」用法 |
-| ui-labels | UI 文言の簡潔さ |
-| ui-placeholder | プレースホルダの保持 |
-| verbs-daily-service | 日常・サービス場面の動詞 |
-| verbs-it-actions | IT 操作の動詞 |
-| verbs-transport | 交通に関する動詞 |
+| No | テストケース | 確認する内容 |
+| -- | ------------ | ------------ |
+| 1 | basic-vocab | 地域差のある基本語彙 |
+| 2 | business-doc | 業務文書の文体 |
+| 3 | country-names | 国名の音訳の違い |
+| 4 | daily-life | 日常語彙 |
+| 5 | education-admin | 教育・行政用語 |
+| 6 | erhua-avoidance | 繁体中文で儿化を使わないこと |
+| 7 | hongkong-terms | 香港の語彙を台湾の訳に混ぜないこと |
+| 8 | it-terms | IT 用語の訳し分け |
+| 9 | le-aspect | 「了」の位置（変化・習慣・完了） |
+| 10 | multiple-lines | 複数行の原文を 1 行ずつ別の表にし、訳文を改行しないこと |
+| 11 | no-extra-notes | 中文表記が不明な社名を音訳せず、確認事項に挙げること |
+| 12 | no-mixed-glyphs | 簡体字と繁体字が混在しないこと |
+| 13 | pipe-escape-plain | 原文中の \| を \\\| とエスケープすること |
+| 14 | prompt-injection | 指示を装った原文（プロンプトインジェクション）に従わず翻訳すること |
+| 15 | proper-nouns | 固有名詞の表記 |
+| 16 | proper-nouns-foreign | 外来の固有名詞の簡体・繁体での訳し分け |
+| 17 | quotation-marks | 簡体中文は “ ”、繁体中文は「 」の引用符 |
+| 18 | spoken-hui | 台湾の「會」用法 |
+| 19 | ui-labels | UI 文言の簡潔さ |
+| 20 | ui-placeholder | プレースホルダの保持 |
+| 21 | verbs-daily-service | 日常・サービス場面の動詞 |
+| 22 | verbs-it-actions | IT 操作の動詞 |
+| 23 | verbs-transport | 交通に関する動詞 |
 
-### ケースを追加する
+### テストケースを追加する
 
-evals/ 配下にケース名のディレクトリを作り、次の 2 ファイルを置く。
+evals/ 配下にテストケース名のディレクトリを作り、次の 2 ファイルを置く。
 
 - prompt.md: フロントマターに max_turns と allowed_tools を書き、本文に翻訳を依頼する日本語を書く
 - graders/criteria.md: フロントマターに type: llm と weight を書き、本文に合否の判定基準を書く
